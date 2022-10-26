@@ -25,8 +25,8 @@ class MailSender {
         const { hostname, displayname, agentstatus, agentmessage, lastcommunication, adminmail } = JSON.parse(content)
 
         const message = {
-            from: 'aminulloh.music03@gmail.com',
-            to: [adminmail, 'aminulloh.zaqi@gmail.com'],  //process.env.ADMINMAIL1, process.env.ADMINMAIL2],
+            from: 'sbdu@bmkg.go.ig',
+            to: [adminmail, 'aminulloh.zaqi@bmkg.go.id'],  //process.env.ADMINMAIL1, process.env.ADMINMAIL2],
             subject: 'End Point Protection Status',
             html: mailTemplate(hostname, displayname, agentstatus, agentmessage, lastcommunication)
         }
