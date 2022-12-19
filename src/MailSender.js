@@ -26,7 +26,7 @@ class MailSender {
 
         const message = {
             from: 'sbdu@bmkg.go.id',
-            to: [adminmail, 'aminulloh.zaqi@bmkg.go.id'],  //process.env.ADMINMAIL1, process.env.ADMINMAIL2],
+            to: [adminmail],  //process.env.ADMINMAIL1, process.env.ADMINMAIL2],
             subject: 'End Point Protection Status',
             html: mailTemplate(hostname, displayname, agentstatus, agentmessage, lastcommunication)
         }
