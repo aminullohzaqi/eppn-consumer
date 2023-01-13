@@ -31,9 +31,9 @@ class Listener {
                 body: body,
                 adminmail: adminmail
             }
-            // const resultEmail = await this._mailSender.sendEmailDWHU(JSON.stringify(content))
-            await this._mailSender.sendWhatsAppDWHU(body)
-            // console.log(resultEmail)
+            const resultEmail = await this._mailSender.sendEmailDWHU(JSON.stringify(content))
+            // await this._mailSender.sendWhatsAppDWHU(body)
+            console.log(resultEmail)
             // console.log(resultWhatsApp)
             // console.log(JSON.stringify(content))
         } catch (error) {
