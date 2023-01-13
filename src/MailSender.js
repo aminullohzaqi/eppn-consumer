@@ -1,7 +1,8 @@
 require('dotenv').config()
 const nodemailer = require('nodemailer')
 const mailTemplate = require('./mail')
- 
+const Whatsapp = require('./whatsapp')
+
 class MailSender {
     constructor() {
         this._transporter = nodemailer.createTransport({
@@ -32,6 +33,26 @@ class MailSender {
         }
      
         return this._transporter.sendMail(message)
+    }
+
+    sendEmailDWHU(content) {
+
+        const { title, body, adminmail } = JSON.parse(content)
+
+        const message = {
+            from: 'sbdu@bmkg.go.id',
+            to: [adminmail],  //process.env.ADMINMAIL1, process.env.ADMINMAIL2],
+            subject: title,
+            text: body
+        }
+     
+        return this._transporter.sendMail(message)
+    }
+
+    sendWhatsAppDWHU(body){
+        return(
+            Whatsapp.whatsappReady()
+        )
     }
 }
 
