@@ -1,9 +1,11 @@
 const qrcode = require('qrcode-terminal')
 const { Client, LocalAuth, NoAuth } = require('whatsapp-web.js')
 const DatabaseService = require('./DatabaseService')
+const DatabaseDWService = require('./DatabaseDWService')
 const fs = require('fs')
 
 const databaseService = new DatabaseService()
+const databaseDWService = new DatabaseDWService()
 
 const client = new Client({
     authStrategy: new LocalAuth()
@@ -77,6 +79,17 @@ function whatsappMessage() {
             }
             await client.sendMessage(message.from, textMessage)
         }
+        else if(message.body === '--dwhu') {
+            const rowDb = await databaseDWService.getLastUpdate()
+            let textMessage = '*Last Update* \n\n'
+            for (let i = 0; i < (rowDb.length); i++) {
+                let { tanggal_dan_waktu, tipe, status } = rowDb[i]
+                textMessage = textMessage + 'Tanggal : ' + tanggal_dan_waktu + '\n'
+                textMessage = textMessage + 'Tipe : ' + tipe + '\n'
+                textMessage = textMessage + 'Status : ' + status 
+            }
+            client.sendMessage(message.from, textMessage)
+        } 
         else if(message.body === 'rani') {
             client.sendMessage(message.from, 'love youu......')
         } 
@@ -86,6 +99,7 @@ function whatsappMessage() {
             textMessage = textMessage + '--eppserver \n'
             textMessage = textMessage + '--eppadmin \n'
             textMessage = textMessage + '--epp/{{ipserver}} \n'
+            textMessage = textMessage + '--dwhu'
             await client.sendMessage(message.from, textMessage)
         }
     })

@@ -34,29 +34,6 @@ class DatabaseService {
 
         return result.rows
     }
-
-    // async updateAgentStatusServer (agentstatus, agentmessage, hostname, statusupdate) {
-    //     const query = {
-    //         text: 'UPDATE server SET agentstatus = $1, agentmessage = $2, statusupdate = $3 WHERE hostname = $4',
-    //         values: [agentstatus, agentmessage, statusupdate, hostname]
-    //     }
-    //     const result = await this.pool.query(query)
-    //     console.log(`hostname ${hostname} agentstatus has been successfully updated`)
-
-    //     return result
-    // }
-
-    // async insertLog (serverId, agentstatus, agentmessage, statusupdate) {
-    //     const id = `log-${statusupdate}`
-
-    //     const query = {
-    //         text: 'INSERT INTO log VALUES ($1, $2, $3, $4, $5)',
-    //         values: [id, serverId, agentstatus, agentmessage, statusupdate]
-    //     }
-    //     const result = await this.pool.query(query)
-
-    //     return result
-    // }
 }
 
 module.exports = DatabaseService
