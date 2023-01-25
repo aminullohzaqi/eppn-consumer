@@ -126,7 +126,7 @@ function whatsappMessage() {
         } 
         else if(message.body.indexOf('command') > -1) {
             let textMessage
-            textMessage = textMessage + 'Berikut adalah daftar command yang dapat digunakan:\n'
+            textMessage = 'Berikut adalah daftar command yang dapat digunakan:\n'
             textMessage = textMessage + '--eppserver \n'
             textMessage = textMessage + '--eppadmin \n'
             textMessage = textMessage + '--epp/{{ipserver}} \n'
@@ -142,7 +142,6 @@ function whatsappMessage() {
                     max_tokens: 256
                 });
                 let textMessage = completion.data.choices[0].text
-                console.log(textMessage)
                 await client.sendMessage(message.from, textMessage.trim())
             } catch(error) {
                 if (error.response) {
