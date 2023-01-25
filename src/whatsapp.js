@@ -12,8 +12,8 @@ const client = new Client({
 })
 
 const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
+    apiKey: process.env.OPENAI_API_KEY
+})
   
 const openai = new OpenAIApi(configuration);
 
@@ -124,16 +124,26 @@ function whatsappMessage() {
         else if(message.body === 'rani') {
             client.sendMessage(message.from, 'love youu......')
         } 
+        else if(message.body.indexOf('command') > -1) {
+            let textMessage
+            textMessage = textMessage + 'Berikut adalah daftar command yang dapat digunakan:\n'
+            textMessage = textMessage + '--eppserver \n'
+            textMessage = textMessage + '--eppadmin \n'
+            textMessage = textMessage + '--epp/{{ipserver}} \n'
+            textMessage = textMessage + '--dwhu'
+            await client.sendMessage(message.from, textMessage)
+        }
         else {
             try {
                 const completion = await openai.createCompletion({
                     model: "text-davinci-003",
                     prompt: message.body,
                     temperature: 0.6,
+                    max_tokens: 256
                 });
                 let textMessage = completion.data.choices[0].text
                 console.log(textMessage)
-                await client.sendMessage(message.from, textMessage)
+                await client.sendMessage(message.from, textMessage.trim())
             } catch(error) {
                 if (error.response) {
                     console.error(error.response.status, error.response.data);
@@ -142,15 +152,6 @@ function whatsappMessage() {
                 }
             }
         }
-        // else {
-        //     let textMessage = '*Hai, saya bot*\n'
-        //     textMessage = textMessage + 'Berikut adalah daftar command yang dapat digunakan:\n'
-        //     textMessage = textMessage + '--eppserver \n'
-        //     textMessage = textMessage + '--eppadmin \n'
-        //     textMessage = textMessage + '--epp/{{ipserver}} \n'
-        //     textMessage = textMessage + '--dwhu'
-        //     await client.sendMessage(message.from, textMessage)
-        // }
     })
 }
 
