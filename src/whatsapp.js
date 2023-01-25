@@ -1,5 +1,6 @@
 const qrcode = require('qrcode-terminal')
 const { Client, LocalAuth, NoAuth } = require('whatsapp-web.js')
+const { Configuration, OpenAIApi } = require('openai')
 const DatabaseService = require('./DatabaseService')
 const DatabaseDWService = require('./DatabaseDWService')
 
@@ -9,6 +10,16 @@ const databaseDWService = new DatabaseDWService()
 const client = new Client({
     authStrategy: new LocalAuth()
 })
+
+const configuration = new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+  
+const openai = new OpenAIApi(configuration);
+
+if (!configuration.apiKey) {
+    console.log('Api Key is Invalid')
+}
 
 function whatsappInit() {
     client.on('qr', (qr) => {
@@ -114,14 +125,32 @@ function whatsappMessage() {
             client.sendMessage(message.from, 'love youu......')
         } 
         else {
-            let textMessage = '*Hai, saya bot*\n'
-            textMessage = textMessage + 'Berikut adalah daftar command yang dapat digunakan:\n'
-            textMessage = textMessage + '--eppserver \n'
-            textMessage = textMessage + '--eppadmin \n'
-            textMessage = textMessage + '--epp/{{ipserver}} \n'
-            textMessage = textMessage + '--dwhu'
-            await client.sendMessage(message.from, textMessage)
+            try {
+                const completion = await openai.createCompletion({
+                    model: "text-davinci-003",
+                    prompt: message.body,
+                    temperature: 0.6,
+                });
+                let textMessage = completion.data.choices[0].text
+                console.log(textMessage)
+                await client.sendMessage(message.from, textMessage)
+            } catch(error) {
+                if (error.response) {
+                    console.error(error.response.status, error.response.data);
+                } else {
+                    console.error(`Error with OpenAI API request: ${error.message}`);
+                }
+            }
         }
+        // else {
+        //     let textMessage = '*Hai, saya bot*\n'
+        //     textMessage = textMessage + 'Berikut adalah daftar command yang dapat digunakan:\n'
+        //     textMessage = textMessage + '--eppserver \n'
+        //     textMessage = textMessage + '--eppadmin \n'
+        //     textMessage = textMessage + '--epp/{{ipserver}} \n'
+        //     textMessage = textMessage + '--dwhu'
+        //     await client.sendMessage(message.from, textMessage)
+        // }
     })
 }
 
