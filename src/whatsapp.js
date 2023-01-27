@@ -75,19 +75,24 @@ function whatsappMessage() {
         }
         else if(message.body.indexOf('--epp/') > -1) {
             const splitMessage = message.body.split('/')
-            const rowDb = await databaseService.getDetailServer(splitMessage[1])
             let textMessage = '*Server Admin* \n\n'
-            for (let i = 0; i < (rowDb.length); i++) {
-                let { displayname, hostname, agentstatus, agentmessage, adminname, email, whatsapp } = rowDb[i]
-                textMessage = textMessage + 'Server Name : ' + displayname + '\n'
-                textMessage = textMessage + 'Server IP : ' + hostname + '\n'
-                textMessage = textMessage + 'Agent Status : ' + agentstatus + '\n'
-                textMessage = textMessage + 'Agent Message : ' + agentmessage + '\n'
-                textMessage = textMessage + 'Admin Name : ' + adminname + '\n'
-                textMessage = textMessage + 'Admin Email : ' + email + '\n'
-                textMessage = textMessage + 'Admin Whatsapp : ' + whatsapp
+            const rowDb = await databaseService.getDetailServer(splitMessage[1])
+            if(rowDb != 0) {
+                for (let i = 0; i < (rowDb.length); i++) {
+                    let { displayname, hostname, agentstatus, agentmessage, adminname, email, whatsapp } = rowDb[i]
+                    textMessage = textMessage + 'Server Name : ' + displayname + '\n'
+                    textMessage = textMessage + 'Server IP : ' + hostname + '\n'
+                    textMessage = textMessage + 'Agent Status : ' + agentstatus + '\n'
+                    textMessage = textMessage + 'Agent Message : ' + agentmessage + '\n'
+                    textMessage = textMessage + 'Admin Name : ' + adminname + '\n'
+                    textMessage = textMessage + 'Admin Email : ' + email + '\n'
+                    textMessage = textMessage + 'Admin Whatsapp : ' + whatsapp
+                }
+                await client.sendMessage(message.from, textMessage)
+            } else {
+                textMessage = textMessage + 'Server not found. Please input IP Address correctly'
+                await client.sendMessage(message.from, textMessage)
             }
-            await client.sendMessage(message.from, textMessage)
         }
         else if(message.body === '--dwhu') {
             const rowDb = await databaseDWService.getLastUpdate()
