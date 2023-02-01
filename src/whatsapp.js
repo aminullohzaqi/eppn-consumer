@@ -95,36 +95,41 @@ function whatsappMessage() {
             }
         }
         else if(message.body === '--dwhu') {
-            const rowDb = await databaseDWService.getLastUpdate()
-            let textMessage = '*Last Update* \n\n'
-            for (let i = 0; i < (rowDb.length); i++) {
-                let { 
-                    tanggal_dan_waktu, 
-                    tipe, 
-                    status, 
-                    row_fakta_mutasi,
-                    row_fakta_dapat_disekolahkan, 
-                    row_fakta_hukuman,
-                    row_fakta_ijin_belajar,
-                    row_fakta_kepala_satker,
-                    row_fakta_naik_pangkat,
-                    row_fakta_penghargaan,
-                    row_fakta_series
-                } = rowDb[i]
-                textMessage = textMessage + 'Tanggal : ' + tanggal_dan_waktu + '\n'
-                textMessage = textMessage + 'Tipe : ' + tipe + '\n'
-                textMessage = textMessage + 'Status : ' + status + '\n\n'
-                textMessage = textMessage + '*Total Rows* \n\n'
-                textMessage = textMessage + 'Total Row Fakta Mutasi : ' + row_fakta_mutasi + '\n'
-                textMessage = textMessage + 'Total Row Fakta Dapat Disekolahkan : ' + row_fakta_dapat_disekolahkan + '\n'
-                textMessage = textMessage + 'Total Row Fakta Hukuman : ' + row_fakta_hukuman + '\n'
-                textMessage = textMessage + 'Total Row Fakta Izin Belajar : ' + row_fakta_ijin_belajar + '\n'
-                textMessage = textMessage + 'Total Row Fakta Kepala Satker : ' + row_fakta_kepala_satker + '\n'
-                textMessage = textMessage + 'Total Row Fakta Naik Pangkat : ' + row_fakta_naik_pangkat + '\n'
-                textMessage = textMessage + 'Total Row Fakta Penghargaan : ' + row_fakta_penghargaan + '\n'
-                textMessage = textMessage + 'Total Row Fakta Series : ' + row_fakta_series + '\n' 
+            try {
+                const rowDb = await databaseDWService.getLastUpdate()
+                let textMessage = '*Last Update* \n\n'
+                for (let i = 0; i < (rowDb.length); i++) {
+                    let { 
+                        tanggal_dan_waktu, 
+                        tipe, 
+                        status, 
+                        row_fakta_mutasi,
+                        row_fakta_dapat_disekolahkan, 
+                        row_fakta_hukuman,
+                        row_fakta_ijin_belajar,
+                        row_fakta_kepala_satker,
+                        row_fakta_naik_pangkat,
+                        row_fakta_penghargaan,
+                        row_fakta_series
+                    } = rowDb[i]
+                    textMessage = textMessage + 'Tanggal : ' + tanggal_dan_waktu + '\n'
+                    textMessage = textMessage + 'Tipe : ' + tipe + '\n'
+                    textMessage = textMessage + 'Status : ' + status + '\n\n'
+                    textMessage = textMessage + '*Total Rows* \n\n'
+                    textMessage = textMessage + 'Total Row Fakta Mutasi : ' + row_fakta_mutasi + '\n'
+                    textMessage = textMessage + 'Total Row Fakta Dapat Disekolahkan : ' + row_fakta_dapat_disekolahkan + '\n'
+                    textMessage = textMessage + 'Total Row Fakta Hukuman : ' + row_fakta_hukuman + '\n'
+                    textMessage = textMessage + 'Total Row Fakta Izin Belajar : ' + row_fakta_ijin_belajar + '\n'
+                    textMessage = textMessage + 'Total Row Fakta Kepala Satker : ' + row_fakta_kepala_satker + '\n'
+                    textMessage = textMessage + 'Total Row Fakta Naik Pangkat : ' + row_fakta_naik_pangkat + '\n'
+                    textMessage = textMessage + 'Total Row Fakta Penghargaan : ' + row_fakta_penghargaan + '\n'
+                    textMessage = textMessage + 'Total Row Fakta Series : ' + row_fakta_series + '\n' 
+                }
+                await client.sendMessage(message.from, textMessage)
+            } catch (error) {
+                console.error(`ETL DWHU Response Error: ${error.message}`)
+                await client.sendMessage(message.from, error.message)
             }
-            client.sendMessage(message.from, textMessage)
         } 
         else if(message.body === 'rani') {
             client.sendMessage(message.from, 'love youu......')
