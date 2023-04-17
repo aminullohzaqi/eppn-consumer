@@ -3,9 +3,11 @@ const { Client, LocalAuth, NoAuth } = require('whatsapp-web.js')
 const { Configuration, OpenAIApi } = require('openai')
 const DatabaseService = require('./DatabaseService')
 const DatabaseDWService = require('./DatabaseDWService')
+const EsignApiService = require('./EsignService')
 
 const databaseService = new DatabaseService()
 const databaseDWService = new DatabaseDWService()
+const esignApiService = new EsignApiService()
 
 const client = new Client({
     authStrategy: new LocalAuth()
@@ -131,16 +133,49 @@ function whatsappMessage() {
                 await client.sendMessage(message.from, error.message)
             }
         } 
+        else if(message.body === '--esign') {
+            try {
+                const date = new Date()
+                const formattedDate = date.toLocaleDateString()
+    
+                const statusCode = []
+                const type = ['eSIGN Operasional', 'BMKG QR Code Generator', 'eSIGN Development']
+                const ip = ['172.19.0.243', '172.19.2.220', '172.19.2.171']
+    
+                for (let i = 0; i < type.length; i++) {
+                    const getStatusCode = await esignApiService.getDataStatusCode(type[i])
+                    statusCode.push(getStatusCode)
+                }
+                
+                let textMessage = '*eSIGN Monitoring* \n\n'
+    
+                for (let i = 0; i < statusCode.length; i++) {
+                    textMessage = textMessage + 'Status ' + type[i] + '\n'
+                    textMessage = textMessage + 'IP Address : ' + ip[i] + '\n'
+                    textMessage = textMessage + 'Tanggal    : ' + formattedDate + '\n'
+                    if (statusCode[i] == 200) {
+                        textMessage = textMessage + 'Status       : ON \n'
+                    } else {
+                        textMessage = textMessage + 'Status       : Error \n'
+                    }
+                    textMessage = textMessage + 'Catatan    : Status Code ' + statusCode[i] + '\n\n'
+                }
+                await client.sendMessage(message.from, textMessage)
+            } catch (error) {
+                console.log(error)                
+            }
+        }
         else if(message.body === 'rani') {
             client.sendMessage(message.from, 'love youu......')
         } 
         else if(message.body.indexOf('command') > -1) {
             let textMessage
             textMessage = 'Berikut adalah daftar command yang dapat digunakan:\n'
-            textMessage = textMessage + '--eppserver \n'
-            textMessage = textMessage + '--eppadmin \n'
-            textMessage = textMessage + '--epp/{{ipserver}} \n'
-            textMessage = textMessage + '--dwhu'
+            // textMessage = textMessage + '--eppserver \n'
+            // textMessage = textMessage + '--eppadmin \n'
+            // textMessage = textMessage + '--epp/{{ipserver}} \n'
+            textMessage = textMessage + '--dwhu \n'
+            textMessage = textMessage + '--esign'
             await client.sendMessage(message.from, textMessage)
         }
         else {
@@ -149,7 +184,7 @@ function whatsappMessage() {
                     model: "text-davinci-003",
                     prompt: message.body,
                     temperature: 0.6,
-                    max_tokens: 250
+                    max_tokens: 500
                 });
                 let textMessage = completion.data.choices[0].text
                 await client.sendMessage(message.from, textMessage.trim())
