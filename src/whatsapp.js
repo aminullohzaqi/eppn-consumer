@@ -171,7 +171,7 @@ function whatsappMessage() {
         else if(message.body.indexOf('command') > -1) {
             let textMessage
             textMessage = 'Berikut adalah daftar command yang dapat digunakan:\n'
-            // textMessage = textMessage + '--eppserver \n'
+            textMessage = textMessage + '--eppserver \n'
             // textMessage = textMessage + '--eppadmin \n'
             // textMessage = textMessage + '--epp/{{ipserver}} \n'
             textMessage = textMessage + '--dwhu \n'
