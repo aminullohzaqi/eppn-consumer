@@ -154,7 +154,7 @@ function whatsappMessage() {
                 for (let i = 0; i < statusCode.length; i++) {
                     textMessage = textMessage + 'Status ' + type[i] + '\n'
                     textMessage = textMessage + 'IP Address : ' + ip[i] + '\n'
-                    textMessage = textMessage + 'Tanggal    : ' + tanggal + ' - ' + bulan + ' - ' + tahun + '\n'
+                    textMessage = textMessage + 'Tanggal    : ' + tanggal + ' - ' + (bulan + 1) + ' - ' + tahun + '\n'
                     if (statusCode[i] == 200) {
                         textMessage = textMessage + 'Status       : ON \n'
                         textMessage = textMessage + 'Catatan    : - ' + '\n\n'
