@@ -52,7 +52,7 @@ function whatsappMessage() {
         if(message.body === '!ping') {
             client.sendMessage(message.from, 'pong')
         } 
-        else if(message.body === '--eppserver') {
+        else if(message.body.indexOf('eppserver') > -1) {
             const rowDb = await databaseService.getServers()
             let textMessage = '*Server Status* \n\n'
             for (let i = 0; i < (rowDb.length); i++) {
@@ -96,7 +96,7 @@ function whatsappMessage() {
                 await client.sendMessage(message.from, textMessage)
             }
         }
-        else if(message.body === '--dwhu') {
+        else if(message.body.indexOf('dwhu') > -1) {
             try {
                 const rowDb = await databaseDWService.getLastUpdate()
                 let textMessage = '*Last Update* \n\n'
@@ -133,10 +133,12 @@ function whatsappMessage() {
                 await client.sendMessage(message.from, error.message)
             }
         } 
-        else if(message.body === '--esign') {
+        else if(message.body.indexOf('esign') > -1) {
             try {
                 const date = new Date()
-                const formattedDate = date.toLocaleDateString()
+                const tanggal = date.getDate()
+                const bulan = date.getMonth()
+                const tahun = date.getFullYear()
     
                 const statusCode = []
                 const type = ['eSIGN Operasional', 'BMKG QR Code Generator', 'eSIGN Development']
@@ -152,13 +154,14 @@ function whatsappMessage() {
                 for (let i = 0; i < statusCode.length; i++) {
                     textMessage = textMessage + 'Status ' + type[i] + '\n'
                     textMessage = textMessage + 'IP Address : ' + ip[i] + '\n'
-                    textMessage = textMessage + 'Tanggal    : ' + formattedDate + '\n'
+                    textMessage = textMessage + 'Tanggal    : ' + tanggal + ' - ' + bulan + ' - ' + tahun + '\n'
                     if (statusCode[i] == 200) {
                         textMessage = textMessage + 'Status       : ON \n'
+                        textMessage = textMessage + 'Catatan    : - ' + '\n\n'
                     } else {
                         textMessage = textMessage + 'Status       : Error \n'
+                        textMessage = textMessage + 'Catatan    : Error HTTP Code ' + statusCode[i] + '\n\n'
                     }
-                    textMessage = textMessage + 'Catatan    : Status Code ' + statusCode[i] + '\n\n'
                 }
                 await client.sendMessage(message.from, textMessage)
             } catch (error) {
